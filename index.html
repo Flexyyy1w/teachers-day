@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>A Teachers' Day tribute</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,500;1,600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="teachersday-slides.css">
+</head>
+<body>
+	<div class="toy toy-pencil">✎</div>
+	<div class="toy toy-star">✦</div>
+	<div class="toy toy-ball">●</div>
+	<div class="toy toy-paper">✦</div>
+
+	<main class="surprise" id="surprise">
+		<div class="progress" aria-label="Slide progress"><span class="progress-fill" id="progressFill"></span></div>
+		<p class="tiny-label">A quick Teachers' Day tribute for an excellent teacher</p>
+
+		<section class="slide is-active" data-slide="0">
+			<p class="slide-count">01 <span>/ 04</span></p>
+			<div class="intro-badge">05 · 09 · 2026</div>
+			<h1>Happy<br><em>Teachers' Day</em></h1>
+			<p class="slide-copy">For the people who make learning feel less like a lesson and more like a little adventure.</p>
+			<button class="next-button" type="button" data-next>Start the tribute <span>→</span></button>
+		</section>
+
+		<section class="slide" data-slide="1" aria-hidden="true">
+			<p class="slide-count">02 <span>/ 04</span></p>
+			<p class="section-kicker">There is something inside</p>
+			<h2>A note,<br><em>sealed with respect.</em></h2>
+			<button class="envelope" id="envelope" type="button" aria-label="Open the envelope">
+				<span class="envelope-flap"></span>
+				<span class="envelope-paper">For Sir<br><small>respect always</small></span>
+				<span class="envelope-front"></span>
+			</button>
+			<p class="hint" id="envelopeHint">Tap the envelope to open it</p>
+			<button class="next-button hidden" id="envelopeNext" type="button" data-next>Read the note <span>→</span></button>
+		</section>
+
+		<section class="slide" data-slide="2" aria-hidden="true">
+			<p class="slide-count">03 <span>/ 04</span></p>
+			<p class="section-kicker">For the record</p>
+			<div class="sir-layout">
+				<div>
+					<h2>Dear<br><em>Rajat Sir,</em></h2>
+					<p class="slide-copy">Respect for every explanation, every laugh, and for making even the confusing bits feel possible. Your lessons stay long after the class ends.</p>
+					<p class="hand-note">A genuinely legendary teacher. <span>✦</span></p>
+				</div>
+				<div class="sir-photo"><img src="image%20copy.png" alt="Rajat Sir standing in front of a classroom board"><span>our<br>best<br>teacher</span></div>
+			</div>
+			<button class="next-button" type="button" data-next>One last question <span>→</span></button>
+		</section>
+
+		<section class="slide party-slide" data-slide="3" aria-hidden="true">
+			<p class="slide-count">04 <span>/ 04</span></p>
+			<div class="party-confetti">✦　·　✦</div>
+			<p class="section-kicker">Important classroom business</p>
+			<h2>Party toh<br><em>banti hai, right?</em></h2>
+			<p class="slide-copy">A Teachers' Day celebration for the legend of our classroom?</p>
+			<div class="party-actions" id="partyActions">
+				<button class="yes-button" id="yesButton" type="button">Yes, obviously! ✦</button>
+				<button class="no-button" id="noButton" type="button">No</button>
+			</div>
+			<p class="no-message" id="noMessage" aria-live="polite"></p>
+			<div class="celebration" id="celebration" aria-live="polite"><span>🎉</span><b>Yesss! Party locked.</b><small>Rajat Sir deserves the best one.</small></div>
+		</section>
+
+		<div class="slide-controls">
+			<button class="back-button" id="backButton" type="button" aria-label="Previous slide">←</button>
+			<div class="dots" id="dots" aria-label="Choose a slide"></div>
+			<span class="swipe-note">click to continue</span>
+		</div>
+	</main>
+
+	<script>
+		const slides = [...document.querySelectorAll('.slide')];
+		const dots = document.getElementById('dots');
+		const progressFill = document.getElementById('progressFill');
+		const backButton = document.getElementById('backButton');
+		const envelope = document.getElementById('envelope');
+		const envelopeHint = document.getElementById('envelopeHint');
+		const envelopeNext = document.getElementById('envelopeNext');
+		const noButton = document.getElementById('noButton');
+		const noMessage = document.getElementById('noMessage');
+		const yesButton = document.getElementById('yesButton');
+		const celebration = document.getElementById('celebration');
+		let currentSlide = 0;
+		let noAttempts = 0;
+
+		slides.forEach((_, index) => {
+			const dot = document.createElement('button');
+			dot.type = 'button';
+			dot.className = 'dot';
+			dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+			dot.addEventListener('click', () => showSlide(index));
+			dots.appendChild(dot);
+		});
+
+		function showSlide(index) {
+			currentSlide = Math.max(0, Math.min(index, slides.length - 1));
+			slides.forEach((slide, slideIndex) => {
+				slide.classList.toggle('is-active', slideIndex === currentSlide);
+				slide.setAttribute('aria-hidden', String(slideIndex !== currentSlide));
+			});
+			document.querySelectorAll('.dot').forEach((dot, dotIndex) => dot.classList.toggle('is-active', dotIndex === currentSlide));
+			progressFill.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+			backButton.disabled = currentSlide === 0;
+		}
+
+		document.querySelectorAll('[data-next]').forEach((button) => button.addEventListener('click', () => showSlide(currentSlide + 1)));
+		backButton.addEventListener('click', () => showSlide(currentSlide - 1));
+		envelope.addEventListener('click', () => {
+			envelope.classList.add('is-open');
+			envelopeHint.textContent = 'A straightforward thank-you for you';
+			envelopeNext.classList.remove('hidden');
+		});
+
+		noButton.addEventListener('click', () => {
+			noAttempts += 1;
+			const messages = ['Nahi hoga click 😌', 'Arre ruk bhi jao!', 'Nice try... party hogi ✦'];
+			const moves = [[30, -18], [-34, 18], [42, -10], [-24, 24], [35, 12]];
+			const [moveX, moveY] = moves[(noAttempts - 1) % moves.length];
+			noMessage.textContent = messages[Math.min(noAttempts - 1, messages.length - 1)];
+			noButton.style.transform = `translate(${moveX}px, ${moveY}px)`;
+		});
+
+		yesButton.addEventListener('click', () => {
+			celebration.classList.add('is-visible');
+			yesButton.textContent = 'Best decision ever ✦';
+			noButton.disabled = true;
+			noMessage.textContent = '';
+		});
+
+		showSlide(0);
+	</script>
+</body>
+</html>
